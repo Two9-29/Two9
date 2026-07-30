@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mara Voss — Links</title>
+<title>Two9 — Links</title>
 <style>
   :root{
     --mono: 'SF Mono', 'Space Mono', 'Courier New', monospace;
@@ -73,6 +73,12 @@
   .scope canvas{
     width: 92px; height: 46px;
     filter: drop-shadow(0 0 4px rgba(255,106,57,.55));
+  }
+  .profile-pic{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
   }
   h1{
     font-family: var(--mono);
@@ -157,53 +163,24 @@
 <div class="bg-noise"></div>
 <div class="page">
 
-  <div class="scope"><canvas id="waveform" width="184" height="92"></canvas></div>
+  <div class="scope"><img src="profile.jpg" alt="Two9" class="profile-pic"></div>
 
   <h1>Two9</h1>
   <p class="tagline">Trusting someone means relying on them and only weak do that</p>
 
   <nav class="jacks" aria-label="Links">
-    <a class="jack" href=https://x.com/Two9ngle target="_blank" rel="noopener">
+    <a class="jack" href="https://x.com/Two9angle" target="_blank" rel="noopener">
       <span class="leds"><span class="led"></span><span class="led"></span></span>
       <svg class="jack-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 3h3.2l-7 8 8.2 10h-6.4l-5-6.5L4.7 21H1.5l7.5-8.6L1 3h6.5l4.5 6z"/></svg>
-      <span class="jack-label">X</span>
+      <span class="jack-label">Two9</span>
     </a>
-    <a class="jack" href="#" target="_blank" rel="noopener">
+    <div class="jack">
       <span class="leds"><span class="led"></span><span class="led"></span></span>
       <svg class="jack-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="7" width="16" height="11" rx="5"/><circle cx="9" cy="12.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12.5" r="1.1" fill="currentColor" stroke="none"/></svg>
       <span class="jack-label">Two9</span>
-    </a>
+    </div>
   </nav>
 </div>
 
-<script>
-  const canvas = document.getElementById('waveform');
-  const ctx = canvas.getContext('2d');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let t = 0;
-
-  function draw(){
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0,0,w,h);
-    ctx.beginPath();
-    ctx.strokeStyle = '#FF6A39';
-    ctx.lineWidth = 3;
-    ctx.lineJoin = 'round';
-    for(let x=0; x<=w; x+=2){
-      const p = x / w;
-      const y = h/2
-        + Math.sin(p*14 + t) * 14
-        + Math.sin(p*3.2 + t*0.6) * 10
-        + Math.sin(p*23 + t*1.4) * 3;
-      x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-    }
-    ctx.stroke();
-    if(!reduceMotion){
-      t += 0.035;
-      requestAnimationFrame(draw);
-    }
-  }
-  draw();
-</script>
 </body>
 </html>
