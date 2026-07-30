@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two9 — Links</title>
+<title>Two9</title>
 <style>
   :root{
     --mono: 'SF Mono', 'Space Mono', 'Courier New', monospace;
@@ -157,11 +157,69 @@
     .jack{ transition:none; }
     .led{ transition:none; }
   }
+  #intro{
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity .7s ease;
+  }
+  #intro.fade-out{ opacity: 0; pointer-events: none; }
+  #intro-video, #intro-gif{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .intro-text{
+    position: relative;
+    z-index: 1;
+    font-family: var(--mono);
+    font-size: 28px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--fg);
+    text-shadow: 0 2px 12px rgba(0,0,0,.6);
+  }
+  #sound-toggle{
+    position: absolute;
+    z-index: 2;
+    bottom: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(21,19,14,.7);
+    border: 1px solid var(--brass);
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  #sound-toggle svg{ width: 20px; height: 20px; }
+  @media (prefers-reduced-motion: reduce){
+    #intro{ display: none; }
+  }
 </style>
 </head>
 <body>
+<div id="intro">
+  <video id="intro-video" src="intro.mp4" autoplay muted playsinline></video>
+  <img id="intro-gif" src="intro.gif" alt="" style="display:none;">
+  <div class="intro-text">Welcome</div>
+  <button id="sound-toggle" aria-label="Turn sound on" type="button">
+    <svg id="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 9v6h4l5 5V4L8 9H4z"/><line x1="16" y1="8" x2="21" y2="16"/><line x1="21" y1="8" x2="16" y2="16"/></svg>
+  </button>
+</div>
+
 <div class="bg-noise"></div>
-<div class="page">
+<div class="page" id="main-site">
 
   <div class="scope"><img src="profile.jpg" alt="Two9" class="profile-pic"></div>
 
@@ -169,7 +227,7 @@
   <p class="tagline">Trusting someone means relying on them and only weak do that</p>
 
   <nav class="jacks" aria-label="Links">
-    <a class="jack" href=https://x.com/Two9angle target="_blank" rel="noopener">
+    <a class="jack" href="https://x.com/Two9ngle" target="_blank" rel="noopener">
       <span class="leds"><span class="led"></span><span class="led"></span></span>
       <svg class="jack-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.3 3h3.2l-7 8 8.2 10h-6.4l-5-6.5L4.7 21H1.5l7.5-8.6L1 3h6.5l4.5 6z"/></svg>
       <span class="jack-label">Two9</span>
@@ -182,5 +240,39 @@
   </nav>
 </div>
 
+<script>
+  const intro = document.getElementById('intro');
+  const video = document.getElementById('intro-video');
+  const gif = document.getElementById('intro-gif');
+  const soundToggle = document.getElementById('sound-toggle');
+  const soundIcon = document.getElementById('sound-icon');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const iconOn = '<path d="M4 9v6h4l5 5V4L8 9H4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>';
+  const iconOff = '<path d="M4 9v6h4l5 5V4L8 9H4z"/><line x1="16" y1="8" x2="21" y2="16"/><line x1="21" y1="8" x2="16" y2="16"/>';
+
+  soundToggle.addEventListener('click', () => {
+    video.muted = !video.muted;
+    soundIcon.innerHTML = video.muted ? iconOff : iconOn;
+    soundToggle.setAttribute('aria-label', video.muted ? 'Turn sound on' : 'Turn sound off');
+  });
+
+  function endIntro(){
+    intro.classList.add('fade-out');
+    setTimeout(() => { intro.style.display = 'none'; }, 700);
+  }
+
+  if(reduceMotion){
+    intro.style.display = 'none';
+  } else {
+    video.addEventListener('ended', endIntro);
+    video.addEventListener('error', () => {
+      video.style.display = 'none';
+      gif.style.display = 'block';
+      soundToggle.style.display = 'none';
+    });
+    setTimeout(endIntro, 15500);
+  }
+</script>
 </body>
 </html>
